@@ -53,7 +53,7 @@
 
     - name: see whats in test
       debug:
-        msg: "{{ test.results }}"
+        msg: "{{ test.results | dict2items }}"
 
     - name: Load policies
       uri:
