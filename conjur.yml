@@ -53,7 +53,7 @@
 
     - name: see whats in test
       debug:
-        msg: "{{ test.results[].content }}"
+        msg: "{{ test.results[?].content }}"
 
     - name: Load policies
       uri:
