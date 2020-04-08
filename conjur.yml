@@ -38,6 +38,10 @@
         repo: "https://github.com/CaptainFluffyToes/dap_policy.git"
         dest: /policy
 
+    - name: check for location of files
+      command: |
+        cat /policy/root.yml
+
     - name: Load policies
       uri:
         url: https://{{conjurfqdn}}/policies/{{ conjuraccount }}/policy/{{ policy_item }}
