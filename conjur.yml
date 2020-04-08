@@ -53,7 +53,7 @@
 
     - name: see whats in test
       debug:
-        msg: "{{ test.results[*].content | b64decode }}"
+        msg: "{{ test | json_query('results[*].content') | b64decode }}"
 
     - name: Load policies
       uri:
