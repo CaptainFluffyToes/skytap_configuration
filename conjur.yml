@@ -38,28 +38,34 @@
         repo: "https://github.com/CaptainFluffyToes/dap_policy.git"
         dest: /policy
 
-    - name: check for location of files
-      command: |
-        cat /policy/root.yml
+      - name: Find all policy files
+        find:
+          paths: "/policy"
+          file_type: file
+          use_regex: yes
+          patterns:
+            - '.*.yml$'
+            - '.*.yaml$'
+        register: policyfiles
 
     - name: Load policies
       uri:
-        url: https://{{conjurfqdn}}/policies/{{ conjuraccount }}/policy/root
+        url: https://{{conjurfqdn}}/policies/{{ conjuraccount }}/policy/{{ policy_item }}
         status_code: 201
         return_content: yes
         method: PUT
         headers:
           Authorization: Token token="{{ conjurTokenFormatted }}"
         validate_certs: no
-        body: "{{lookup('file', '/policy/root.yml') }}"
-      # with_items:
-      #   - root
-      #   - cicd
-      #   - conjur
-      #   - pcf
-      #   - secrets
-      # loop_control:
-      #   loop_var: policy_item
+        body: "{{lookup('file', '/policy/{{ policy_item }}.yml') }}"
+      with_items:
+        - root
+        - cicd
+        - conjur
+        - pcf
+        - secrets
+      loop_control:
+        loop_var: policy_item
 
 
   vars:
