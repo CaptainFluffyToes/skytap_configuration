@@ -1,5 +1,60 @@
 ---
 - hosts: conjur.cybr.com
   tasks:
-    - debug:
-        msg: "{{ CYBERARK_SECRET_VALUE }}"
+    - name: Get conjur access token in the proper format.
+      block:
+        - name: Get API token
+          uri:
+            url: https://{{conjurfqdn}}/authn/{{ conjuraccount }}/login
+            return_content: yes
+            method: GET
+            url_password: "{{ conjurpassword }}"
+            url_username: "{{ conjurusername }}"
+            force_basic_auth: yes
+            validate_certs: no
+          register: conjurAPIKey
+
+        - name: Get Authentication token
+          uri:
+            url: https://{{conjurfqdn}}/authn/{{ conjuraccount }}/{{ conjurusername }}/authenticate
+            return_content: yes
+            method: POST
+            body: "{{ conjurAPIKey.content }}"
+            validate_certs: no
+          register: conjurToken
+
+        - name: Generate dap JWT
+          set_fact:
+            conjurTokenFormatted: "{{ conjurToken.content | b64encode | replace('\r\n', '') }}"
+          no_log: yes
+
+    - name: Get conjur policies
+      git:
+        repo: "https://github.com/CaptainFluffyToes/dap_policy.git"
+        dest: /
+
+    - name: Load policies
+      uri:
+        url: https://{{conjurfqdn}}/policies/{{ conjuraccount }}/policy/{{ policy_item }}
+        status_code: 201
+        return_content: yes
+        method: PUT
+        headers:
+          Authorization: Token token="{{ conjurTokenFormatted }}"
+        validate_certs: no
+        body: "{{lookup('file', '/dap_policies/{{ policy_item }}.yml') }}"
+      with_items:
+        - root
+        - cicd
+        - conjur
+        - pcf
+        - secrets
+      loop_control:
+        loop_var: policy_item
+
+
+  vars:
+    conjurfqdn: "conjur.cybr.com"
+    conjuraccount: "cyberark"
+    conjurusername: "admin"
+    conjurpassword: "{{ CYBERARK_SECRET_VALUE }}"
