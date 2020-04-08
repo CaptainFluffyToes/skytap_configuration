@@ -40,7 +40,7 @@
 
     - name: Find all policy files
       slurp:
-        src: /policy/{{ policy_name }}.yml
+        src: "/policy/{{ policy_name }}.yml"
       with_items:
         - root
         - cicd
@@ -53,7 +53,7 @@
 
     - name: see whats in test
       debug:
-        msg: "{{ test }}"
+        msg: "{{ test['content'] | b64decode }}"
 
     - name: Load policies
       uri:
