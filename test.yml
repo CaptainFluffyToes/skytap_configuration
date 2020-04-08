@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+    - name: show cyberark credential
+      debug:
+        msg: "{{  CYBERARK_SECRET_VALUE }}"
