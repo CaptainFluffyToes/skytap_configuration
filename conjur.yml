@@ -47,7 +47,7 @@
         headers:
           Authorization: Token token="{{ conjurTokenFormatted }}"
         validate_certs: no
-        body: "{{lookup('file', '/policy/dap_policy/{{ policy_item }}.yml') }}"
+        body: "{{lookup('file', '/policy/{{ policy_item }}.yml') }}"
       with_items:
         - root
         - cicd
