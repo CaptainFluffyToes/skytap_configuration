@@ -1,0 +1,5 @@
+---
+- hosts: conjur
+  tasks:
+    - debug:
+        msg: "{{ CYBERARK_SECRET_VALUE }}"
