@@ -49,20 +49,11 @@
         - secrets
       loop_control:
         loop_var: policy_name
-      register: test
+      register: policy_retrieve
 
-    - name: see whats in test
-      debug:
-        msg: "{{ test | json_query('results[*].content') }}"
-
-
-    - name: decode item
-      debug:
-        msg: "{{ balh | b64decode }}"
-      with_items:
-        - "{{ test | json_query('results[*].content') }}"
-      loop_control:
-        loop_var: balh
+    - name: get just contents
+      set_fact:
+        policy_contents: "{{ policy_retrieve | json_query('results[*].content') | b64decode }}"
 
     - name: Load policies
       uri:
@@ -73,7 +64,7 @@
         headers:
           Authorization: Token token="{{ conjurTokenFormatted }}"
         validate_certs: no
-        body: "{{lookup('file', '/policy/{{ policy_item }}.yml') }}"
+        body: "{{ policy_output | json_query('results[*].content') | b64decode }}"
       with_items:
         - root
         - cicd
