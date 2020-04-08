@@ -28,6 +28,11 @@
             conjurTokenFormatted: "{{ conjurToken.content | b64encode | replace('\r\n', '') }}"
           no_log: yes
 
+    - name: install git
+      package:
+        name: git
+        state: present
+
     - name: Get conjur policies
       git:
         repo: "https://github.com/CaptainFluffyToes/dap_policy.git"
