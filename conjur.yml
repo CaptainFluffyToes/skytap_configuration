@@ -38,15 +38,22 @@
         repo: "https://github.com/CaptainFluffyToes/dap_policy.git"
         dest: /policy
 
-      - name: Find all policy files
-        find:
-          paths: "/policy"
-          file_type: file
-          use_regex: yes
-          patterns:
-            - '.*.yml$'
-            - '.*.yaml$'
-        register: policyfiles
+    - name: Find all policy files
+      slurp:
+        src: /policy/{{ policy_name }}.yml
+      with_items:
+        - root
+        - cicd
+        - conjur
+        - pcf
+        - secrets
+      loop_control:
+        loop_var: policy_name
+      register: test
+
+    - name: see whats in test
+      debug:
+        msg: "{{ test }}"
 
     - name: Load policies
       uri:
