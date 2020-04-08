@@ -53,7 +53,7 @@
 
     - name: see whats in test
       debug:
-        msg: "{{ test | json_query('content') }}"
+        msg: "{{ test | json_query('results[*].content') }}"
 
     - name: Load policies
       uri:
