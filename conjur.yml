@@ -44,22 +44,22 @@
 
     - name: Load policies
       uri:
-        url: https://{{conjurfqdn}}/policies/{{ conjuraccount }}/policy/{{ policy_item }}
+        url: https://{{conjurfqdn}}/policies/{{ conjuraccount }}/policy/root
         status_code: 201
         return_content: yes
         method: PUT
         headers:
           Authorization: Token token="{{ conjurTokenFormatted }}"
         validate_certs: no
-        body: "{{lookup('file', '/policy/{{ policy_item }}.yml') }}"
-      with_items:
-        - root
-        - cicd
-        - conjur
-        - pcf
-        - secrets
-      loop_control:
-        loop_var: policy_item
+        body: "{{lookup('file', '/policy/root.yml') }}"
+      # with_items:
+      #   - root
+      #   - cicd
+      #   - conjur
+      #   - pcf
+      #   - secrets
+      # loop_control:
+      #   loop_var: policy_item
 
 
   vars:
