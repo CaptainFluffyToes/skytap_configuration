@@ -58,7 +58,7 @@
 
     - name: decode item
       debug:
-        msg: "{{ balh }} | b64decode"
+        msg: "{{ balh | b64decode }}"
       with_items:
         - "{{ test | json_query('results[*].content') }}"
       loop_control:
