@@ -1,5 +1,5 @@
 ---
-- hosts: conjur
+- hosts: conjur.cybr.com
   tasks:
     - debug:
         msg: "{{ CYBERARK_SECRET_VALUE }}"
