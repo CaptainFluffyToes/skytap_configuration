@@ -54,14 +54,10 @@
     - name: decode contents
       set_fact:
         policy_files: "{{ policy_files | default([]) | union([policy_encoded | b64decode]) }}"
-      with_items:
-        - "{{ policy_retrieve | json_query('results[*].content') }}" 
+      loop:
+        - "{{ policy_retrieve | json_query('results[*].content') | flatten(levels=1) }}" 
       loop_control:
         loop_var: policy_encoded
-
-    - name: see whats in policy_files
-      debug:
-        msg: "{{ policy_files }}"
 
     - name: Load policies
       uri:
