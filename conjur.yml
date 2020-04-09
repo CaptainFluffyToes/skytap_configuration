@@ -55,7 +55,7 @@
       set_fact:
         policy_files: "{{ policy_encoded | b64decode }}"
       loop:
-        - "{{ policy_retrieve | json_query('results[*].content') }}" 
+        - "{{ policy_retrieve | json_query('results[*].content') |list }}" 
       loop_control:
         loop_var: policy_encoded
 
