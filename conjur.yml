@@ -42,11 +42,7 @@
       slurp:
         src: "/policy/{{ policy_name }}.yml"
       with_items:
-        - root
-        - cicd
-        - conjur
-        - pcf
-        - secrets
+        - "{{ policy_names }}"
       loop_control:
         loop_var: policy_name
       register: policy_retrieve
@@ -61,26 +57,27 @@
 
     - name: Load policies
       uri:
-        url: https://{{conjurfqdn}}/policies/{{ conjuraccount }}/policy/{{ policy_item }}
+        url: https://{{conjurfqdn}}/policies/{{ conjuraccount }}/policy/{{ name }}
         status_code: 201
         return_content: yes
         method: PUT
         headers:
           Authorization: Token token="{{ conjurTokenFormatted }}"
         validate_certs: no
-        body: "{{ policy_output | json_query('results[*].content') | b64decode }}"
+        body: "{{ policy }}"
       with_items:
-        - root
-        - cicd
-        - conjur
-        - pcf
-        - secrets
+        - { name: "{{ policy_names }}", policy: "{{ policy_files }}" }
       loop_control:
         loop_var: policy_item
-
 
   vars:
     conjurfqdn: "conjur.cybr.com"
     conjuraccount: "cyberark"
     conjurusername: "admin"
     conjurpassword: "{{ CYBERARK_SECRET_VALUE }}"
+    policy_names:
+      - root
+      - cicd
+      - conjur
+      - pcf
+      - secrets
