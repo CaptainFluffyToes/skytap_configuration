@@ -88,3 +88,4 @@
     conjuraccount: "cyberark"
     conjurusername: "admin"
     conjurpassword: "{{ CYBERARK_SECRET_VALUE }}"
+    policy_files: []
