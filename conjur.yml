@@ -59,6 +59,10 @@
       loop_control:
         loop_var: policy_encoded
 
+    - name: see whats in policy_files
+      debug:
+        msg: "{{ policy_files }}"
+
     - name: Load policies
       uri:
         url: https://{{conjurfqdn}}/policies/{{ conjuraccount }}/policy/{{ policy_item }}
