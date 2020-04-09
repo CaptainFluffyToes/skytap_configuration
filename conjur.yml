@@ -57,14 +57,14 @@
 
     - name: Load policies
       uri:
-        url: https://{{conjurfqdn}}/policies/{{ conjuraccount }}/policy/{{ name }}
+        url: https://{{conjurfqdn}}/policies/{{ conjuraccount }}/policy/{{ policy_item.name }}
         status_code: 201
         return_content: yes
         method: PUT
         headers:
           Authorization: Token token="{{ conjurTokenFormatted }}"
         validate_certs: no
-        body: "{{ policy }}"
+        body: "{{ policy_item.policy }}"
       with_items:
         - { name: "{{ policy_names }}", policy: "{{ policy_files }}" }
       loop_control:
