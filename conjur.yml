@@ -51,9 +51,15 @@
         loop_var: policy_name
       register: policy_retrieve
 
+   
+
     - name: get just contents
       set_fact:
-        policy_contents: "{{ policy_retrieve | json_query('results[*].content') | b64decode }}"
+        policy_contents: "{{ policy_retrieve | json_query('results[*].content')}}" 
+
+    - name: decode contents
+      set_fact:
+        policy_files: "{{ policy_contents | b64decode }}"
 
     - name: Load policies
       uri:
