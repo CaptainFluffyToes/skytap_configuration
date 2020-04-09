@@ -66,7 +66,11 @@
         validate_certs: no
         body: "{{ policy_item.policy }}"
       with_items:
-        - { name: "{{ policy_names }}", policy: "{{ policy_files }}" }
+        - { name: "{{ policy_names[0] }}", policy: "{{ policy_files[0] }}" }
+        - { name: "{{ policy_names[1] }}", policy: "{{ policy_files[1] }}" }
+        - { name: "{{ policy_names[2] }}", policy: "{{ policy_files[2] }}" }
+        - { name: "{{ policy_names[3] }}", policy: "{{ policy_files[3] }}" }
+        - { name: "{{ policy_names[4] }}", policy: "{{ policy_files[4] }}" }
       loop_control:
         loop_var: policy_item
 
